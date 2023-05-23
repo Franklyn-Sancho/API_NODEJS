@@ -1,0 +1,22 @@
+{
+  "name": "request_nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx ./src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.2.3",
+    "@types/sqlite3": "^3.1.8",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "tsx": "^3.12.7"
+  }
+}
