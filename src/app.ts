@@ -18,8 +18,9 @@ const server: http.Server = http.createServer(
     if (req.url === "/login" && req.method === "POST") {
       authenticateRouter(req, res, db);
     }
-    if (req.url === "/rota-autenticada") {
-      if (isAuthenticated(req)) {
+    if (req.url === "/rota-autenticada" && req.method === "GET") {
+      const cookie = req.headers.cookie;
+      if (cookie) {
         res.write("Está rota é autenticada");
         console.log("Esta rota é autenticada");
       } else {
@@ -27,12 +28,7 @@ const server: http.Server = http.createServer(
         res.write("Acesso não autorizado");
       }
 
-      res.end()
-    }
-    else {
-      res.writeHead(404);
-      res.write("Página não encontrada")
-      res.end()
+      res.end();
     }
   }
 );

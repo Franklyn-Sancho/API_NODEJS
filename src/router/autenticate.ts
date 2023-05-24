@@ -24,18 +24,36 @@ export async function authenticateRouter(
 
   const hashedPassword = createHash(password);
 
-  try {
-    userModel.getUser(email, hashedPassword);
+  const user = await userModel.getUser(email);
 
-    req.session = {};
-    req.session.user;
-
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("Usuário autenticado com sucesso");
-  } catch (error) {
+  if (!user) {
     res.statusCode = 401;
-    res.setHeader("Content-Type", "text/plain");
-    res.end("Credenciais Inválidas");
+    res.setHeader("Content-Type", "application/json");
+    res.end(
+      JSON.stringify({
+        message: "Usuário não encontrado",
+      })
+    );
+    return;
   }
+
+  if (user.password !== hashedPassword) {
+    res.statusCode = 401;
+    res.setHeader("Content-Type", "application/json");
+    res.end(
+      JSON.stringify({
+        message: "Senha incorreta",
+      })
+    );
+    return;
+  }
+
+  res.statusCode = 200;
+  res.setHeader("Set-Cookie", "authenticated=true");
+  console.log(res.setHeader)
+  res.end(
+    JSON.stringify({
+      message: "Autenticado com sucesso",
+    })
+  );
 }
