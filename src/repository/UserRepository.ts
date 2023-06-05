@@ -7,18 +7,26 @@ interface User {
   password: string;
 }
 
+
+//Classe Repositório
 export class UserRepository {
   constructor(private db: sqlite3.Database) {}
 
-  async createTable() {
+  //função para criar tabela.
+  async createTableUser() {
     this.db.run(
-      "CREATE TABLE IF NOT EXISTS User (id TEXT, email TEXT, password TEXT)"
+      "CREATE TABLE IF NOT EXISTS User (id TEXT, email TEXT UNIQUE, password TEXT)"
     );
   }
 
-  async insertUser(email: string, password: string): Promise<User> {
+
+  //função de inserir usuários na tabela
+  async insertUser(
+    email: string,
+    password: string,
+  ): Promise<User> {
     const id = crypto.randomBytes(16).toString("hex");
-    const sql = `INSERT INTO user (id, email, password) values (?, ?, ?)`;
+    const sql = `INSERT INTO User (id, email, password) values (?, ?, ?)`;
     const params = [id, email, password];
 
     return new Promise((resolve, reject) => {
@@ -31,9 +39,9 @@ export class UserRepository {
     });
   }
 
-  getUser(email: string): Promise<User> {
-    /* const hashedPassword = createHash(password); */
 
+  //função de encontrar e autenticar usuários
+  getUserByEmail(email: string): Promise<User> {
     const sql = `SELECT * FROM User WHERE email = ?`;
     const params = [email];
 

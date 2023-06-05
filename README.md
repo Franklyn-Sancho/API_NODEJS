@@ -1,2 +1,3 @@
 # API_NODEJS
-## under construction
+
+Construção de uma API apenas com os recursos do NODEJS

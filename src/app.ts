@@ -3,13 +3,22 @@ import sqlite3 from "sqlite3";
 import { AuthController } from "./controller/AuthController";
 import { AuthService } from "./service/AuthService";
 import { UserRepository } from "./repository/UserRepository";
+import { ProductRepository } from "./repository/ProductRepository";
+import { ProductController } from "./controller/ProductController";
+import { ProductService } from "./service/ProductService";
 
 const db = new sqlite3.Database("my-database.db");
 const userRepository = new UserRepository(db);
-userRepository.createTable();
+const productRepository = new ProductRepository(db);
+userRepository.createTableUser();
+productRepository.createTableProduct();
 
 const authController = new AuthController(
   new AuthService(new UserRepository(db))
+);
+
+const productController = new ProductController(
+  new ProductService(new ProductRepository(db))
 );
 
 const server = http.createServer((req, res) => {
@@ -28,6 +37,13 @@ const server = http.createServer((req, res) => {
     }
 
     res.end();
+  }
+  else if(req.url === "/product/find" && req.method === "POST") {
+    productController.findByBrand(req, res)
+  }
+
+  else if (req.url === "/product/new" && req.method === "POST") {
+    productController.register(req, res)
   }
 });
 
